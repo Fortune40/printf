@@ -1,45 +1,68 @@
 #include "main.h"
 /**
- * _printf - is a function that selects the correct function to print.
- * @format: identifier to look for.
- * Return: the length of the string.
+ * _printf - Entry point
+ * Desc: Entry
+ *@format: pointer
+ * Return: On success.
  */
-int _printf(const char * const format, ...)
+int _printf(const char *format, ...)
 {
-	convert_match m[] = {
-		{"%s", printf_string}, {"%c", printf_char},
-		{"%%", printf_37},
-		{"%i", printf_int}, {"%d", printf_dec}, {"%r", printf_srev},
-		{"%R", printf_rot13}, {"%b", printf_bin}, {"%u", printf_unsigned},
-		{"%o", printf_oct}, {"%x", printf_hex}, {"%X", printf_HEX},
-		{"%S", printf_exclusive_string}, {"%p", printf_pointer}
-	};
+va_list mylist;
+unsigned int i = 0, j = 0;
 
-	va_list args;
-	int i = 0, j, len = 0;
+if (!format || (format[0] == '%' && format[1] == '\0'))
+return (-1);
 
-	va_start(args, format);
-	if (format == NULL || (format[0] == '%' && format[1] == '\0'))
-		return (-1);
-
-Here:
-	while (format[i] != '\0')
-	{
-		j = 13;
-		while (j >= 0)
-		{
-			if (m[j].id[0] == format[i] && m[j].id[1] == format[i + 1])
-			{
-				len += m[j].f(args);
-				i = i + 2;
-				goto Here;
-			}
-			j--;
-		}
-		_putchar(format[i]);
-		len++;
-		i++;
-	}
-	va_end(args);
-	return (len);
+va_start(mylist, format);
+for (i = 0; format[i] != '\0'; i++)
+{
+if (format[i] == '%')
+{
+if (format[i + 1] == '%')
+{_putchar('%');
+j++;
+i++;
 }
+else if (get_op_func(format, i + 1) != NULL)
+{j += (get_op_func(format, i + 1))(mylist);
+i++;
+}
+else
+{_putchar(format[i]);
+j++;
+}
+}
+else
+{_putchar(format[i]);
+j++;
+}
+}
+va_end(mylist);
+return (j);
+}
+/**
+ * get_op_func - Entry function
+ * @s: operator
+ * @pos: position
+ * Return: function
+ */
+int (*get_op_func(const char *s, int pos))(va_list)
+{
+print_fun ops[] = {
+{"c", print_single_char},
+{"s", print_string_char},
+{"d", print_decimal},
+{"i", print_decimal},
+{NULL, NULL}};
+
+int k;
+for (k = 0; ops[k].op != NULL; k++)
+{
+if (ops[k].op[0] == s[pos])
+{
+return (ops[k].f);
+}
+}
+return (NULL);
+}
+
