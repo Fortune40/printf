@@ -1,45 +1,49 @@
-#ifndef _MAIN_H_
-#define _MAIN_H_
+fndef MAIN_H
+#define MAIN_H
 
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
-#include <unistd.h>
 #include <stdarg.h>
+#include <limits.h>
+#include <unistd.h>
+
+
 
 /**
- * struct Pf_func - format
- * _printf- print function
- * @op: pointer
- * @f: function pointer
+ * struct format - match the conversion specifiers for printf
+ * @id: type char pointer of the specifier i.e (l, h) for (d, i, u, o, x, X)
+ * @f: type pointer to function for the conversion specifier
+ *
  */
-typedef struct Pf_func
+
+typedef struct format
 {
-char *op;
-int (*f)(va_list);
-} print_fun;
+	char *id;
+	int (*f)();
+} convert_match;
 
-/**
- * _printf - Entry function
- * @format: operator
- * Return: function
- */
-int _printf(const char *format, ...); /*prototype printf*/
-/**
- *_putchar-printing character
- * @c:character to be printed
- * Return: 0
- */
-int _putchar(char c); /*prototype putchar*/
-int _strcmp(const char *s1, char *s2);
-int (*get_op_func(const char *s, int pos))(va_list);
+int printf_pointer(va_list val);
+int printf_hex_aux(unsigned long int num);
+int printf_HEX_aux(unsigned int num);
+int printf_exclusive_string(va_list val);
+int printf_HEX(va_list val);
+int printf_hex(va_list val);
+int printf_oct(va_list val);
+int printf_unsigned(va_list args);
+int printf_bin(va_list val);
+int printf_srev(va_list args);
+int printf_rot13(va_list args);
+int printf_int(va_list args);
+int printf_dec(va_list args);
+int _strlen(char *s);
+int *_strcpy(char *dest, char *src);
+int _strlenc(const char *s);
+int rev_string(char *s);
+int _strlenc(const char *s);
+int printf_37(void);
+int printf_char(va_list val);
+int printf_string(va_list val);
+int _putchar(char c);
+int _printf(const char *format, ...);
 
-int _pow_recursion(int x, int y);
-int print_single_char(va_list c);
-int print_string_char(va_list s);
-int print_int(va_list i);
-int print_dec(va_list d);
-int print_decimal(va_list d);
-int the_range(unsigned int n);
-/*prototype function that compares two strings.*/
 #endif
